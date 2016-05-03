@@ -91,32 +91,33 @@ sudo chown -R ${USER} ${BUNDLE_DIR}
 # rebuilding fibers
 cd ${BUNDLE_DIR}/programs/server
 
-if [ -d ./npm ]; then
-  cd npm
-  if [ -d ./node_modules ]; then # Meteor 1.3
-    cd node_modules
-    rebuild_binary_npm_modules
-    cd ..
-  else
-    rebuild_binary_npm_modules
-  fi
-  cd ../
-fi
+# if [ -d ./npm ]; then
+#   cd npm
+#   if [ -d ./node_modules ]; then # Meteor 1.3
+#     cd node_modules
+#     rebuild_binary_npm_modules
+#     cd ..
+#   else
+#     rebuild_binary_npm_modules
+#   fi
+#   cd ../
+# fi
 
-if [ -d ./node_modules ]; then
-  cd ./node_modules
-  gyp_rebuild_inside_node_modules
-  cd ../
-fi
+# if [ -d ./node_modules ]; then
+#   cd ./node_modules
+#   gyp_rebuild_inside_node_modules
+#   cd ../
+# fi
 
-if [ -f package.json ]; then
-  # support for 0.9
-  sudo npm install
-else
-  # support for older versions
-  sudo npm install fibers
-  sudo npm install bcrypt
-fi
+# if [ -f package.json ]; then
+#   # support for 0.9
+#   sudo npm install
+# else
+#   # support for older versions
+#   sudo npm install fibers
+#   sudo npm install bcrypt
+# fi
+sudo npm install
 
 cd /opt/<%= appName %>/
 
@@ -142,7 +143,15 @@ sudo stop <%= appName %> || :
 sudo start <%= appName %> || :
 
 echo "Waiting for <%= deployCheckWaitTime %> seconds while app is booting up"
-sleep <%= deployCheckWaitTime %>
+#sleep <%= deployCheckWaitTime %>
+
+COUNTER=0
+while [  $COUNTER -lt 10 ]; do
+   echo The counter is $COUNTER
+   let COUNTER=COUNTER+1
+   sleep <%= deployCheckWaitTime %>
+   curl localhost:${PORT} && let COUNTER=10
+done
 
 echo "Checking is app booted or not?"
 curl localhost:${PORT} || revert_app
