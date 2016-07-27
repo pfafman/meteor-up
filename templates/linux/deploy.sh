@@ -117,8 +117,8 @@ cd ${BUNDLE_DIR}/programs/server
 #   sudo npm install fibers
 #   sudo npm install bcrypt
 # fi
-sudo rm -rf node_modules
-sudo npm install
+rm -rf node_modules
+npm install
 
 cd /opt/<%= appName %>/
 
