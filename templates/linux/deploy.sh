@@ -121,7 +121,7 @@ cd ${BUNDLE_DIR}/programs/server
 
 echo "Reinstall npm modules"
 sudo rm -rf node_modules
-sudo npm install
+npm install
 
 cd ${APP_DIR}
 
