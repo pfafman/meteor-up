@@ -79,7 +79,8 @@ revert_app (){
 # logic
 set -e
 
-TMP_DIR=/opt/<%= appName %>/tmp
+APP_DIR=/opt/<%= appName %>
+TMP_DIR=${APP_DIR}/tmp
 BUNDLE_DIR=${TMP_DIR}/bundle
 
 cd ${TMP_DIR}
@@ -88,7 +89,7 @@ sudo tar xvzf bundle.tar.gz > /dev/null
 sudo chmod -R +x *
 sudo chown -R ${USER} ${BUNDLE_DIR}
 
-# rebuilding fibers
+# reinstall npm modules
 cd ${BUNDLE_DIR}/programs/server
 
 # if [ -d ./npm ]; then
@@ -117,10 +118,12 @@ cd ${BUNDLE_DIR}/programs/server
 #   sudo npm install fibers
 #   sudo npm install bcrypt
 # fi
-rm -rf node_modules
+
+echo "Reinstall npm modules"
+sudo rm -rf node_modules
 npm install
 
-cd /opt/<%= appName %>/
+cd ${APP_DIR}
 
 # remove old app, if it exists
 if [ -d old_app ]; then
